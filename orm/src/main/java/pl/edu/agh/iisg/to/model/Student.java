@@ -26,7 +26,7 @@ public class Student {
     @Column(name = Columns.INDEX_NUMBER, unique = true)
     private int indexNumber;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "student")
     private Set<Grade> gradeSet = new HashSet<>();
 
     @ManyToMany(mappedBy = "studentSet")

@@ -24,8 +24,7 @@ public class CourseDao extends GenericDao<Course> {
                     .setParameter("name", name)
                     .uniqueResultOptional();
         } catch (PersistenceException e) {
-            e.printStackTrace();
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 }

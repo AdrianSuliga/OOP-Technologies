@@ -1,19 +1,27 @@
 package pl.edu.agh.iisg.to.repository;
 
 import pl.edu.agh.iisg.to.dao.CourseDao;
+import pl.edu.agh.iisg.to.dao.GradeDao;
 import pl.edu.agh.iisg.to.dao.StudentDao;
 import pl.edu.agh.iisg.to.model.Course;
+import pl.edu.agh.iisg.to.model.Grade;
 import pl.edu.agh.iisg.to.model.Student;
+import pl.edu.agh.iisg.to.session.TransactionService;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class StudentRepository implements Repository<Student> {
+    private final TransactionService transactionService;
     private final StudentDao studentDao;
     private final CourseDao courseDao;
+    private  final GradeDao gradeDao;
 
-    public StudentRepository(StudentDao studentDao, CourseDao courseDao) {
+    public StudentRepository(TransactionService transactionService, StudentDao studentDao, CourseDao courseDao, GradeDao gradeDao) {
+        this.transactionService = transactionService;
         this.studentDao = studentDao;
         this.courseDao = courseDao;
+        this.gradeDao = gradeDao;
     }
 
     @Override
@@ -33,17 +41,30 @@ public class StudentRepository implements Repository<Student> {
 
     @Override
     public void remove(Student student) {
-        for (Course course : new HashSet<>(student.courseSet())) {
+        for (Course course : new ArrayList<>(student.courseSet())) {
             course.studentSet().remove(student);
-            student.courseSet().remove(course);
+            courseDao.save(course);
+        }
+
+        for (Grade g : new ArrayList<>(student.gradeSet())) {
+            gradeDao.remove(g);
         }
 
         this.studentDao.remove(student);
     }
 
     public List<Student> findAllByCourseName(String courseName) {
-        Optional<Course> course = this.courseDao.findByName(courseName);
+        var courseOpt = courseDao.findByName(courseName);
+        if (courseOpt.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Course course = courseOpt.get();
+        return course.studentSet().stream()
+                .sorted(Comparator.comparing(Student::lastName).thenComparing(Student::firstName))
+                .collect(Collectors.toList());
+    }
 
-        return course.map(value -> value.studentSet().stream().toList()).orElse(Collections.emptyList());
+    public Optional<Student> findByIndexNumber(int indexNumber) {
+        return studentDao.findByIndexNumber(indexNumber);
     }
 }

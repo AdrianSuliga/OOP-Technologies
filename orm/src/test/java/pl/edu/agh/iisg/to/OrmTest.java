@@ -32,7 +32,7 @@ public class OrmTest {
 
     private final GradeDao gradeDao = new GradeDao(sessionService);
 
-    private final StudentRepository studentRepository = new StudentRepository(studentDao, courseDao);
+    private final StudentRepository studentRepository = new StudentRepository(sessionService,  studentDao, courseDao, gradeDao);
 
     private final SchoolService schoolService = new SchoolService(sessionService, studentRepository, courseDao, gradeDao);
 
@@ -204,7 +204,7 @@ public class OrmTest {
     public void courseReportCanBeObtained() {
         // Given
         var student1 = studentDao.create("Kasia", "Kowalska", 1000124).orElseThrow();
-        var student2 = studentDao.create("Piotr", "Budynek", 100123).orElseThrow();
+        var student2 = studentDao.create("Piotr", "Budynek", 1000123).orElseThrow();
         var course1 = courseDao.create("Bazy").orElseThrow();
 
         schoolService.enrollStudent(course1, student1);

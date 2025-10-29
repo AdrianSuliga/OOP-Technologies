@@ -26,7 +26,7 @@ public class Course {
     @Column(name = Columns.ID)
     private int id;
 
-    @Column(name = Columns.NAME, nullable = true, length = 50, unique = true)
+    @Column(name = Columns.NAME, length = 50, unique = true)
     private String name;
 
     @ManyToMany
