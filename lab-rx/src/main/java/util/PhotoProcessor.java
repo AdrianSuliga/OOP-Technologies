@@ -20,12 +20,18 @@ public class PhotoProcessor {
         return PhotoSize.resolve(photo) != PhotoSize.SMALL;
     }
 
+    public Boolean isPhotoMedium(Photo photo) {
+        return PhotoSize.resolve(photo) == PhotoSize.MEDIUM;
+    }
+
+    public Boolean isPhotoLarge(Photo photo) {
+        return PhotoSize.resolve(photo) == PhotoSize.LARGE;
+    }
+
     public Photo convertToMiniature(Photo photo) throws IOException {
         log.info("...Converting photo... : " + photo.getPhotoData().length);
         return resize(photo, 300, 200);
     }
-
-
 
     private Photo resize(Photo photo, int scaledWidth, int scaledHeight)
             throws IOException {

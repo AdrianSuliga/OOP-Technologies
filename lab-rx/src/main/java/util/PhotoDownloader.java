@@ -42,7 +42,7 @@ public class PhotoDownloader {
                     try {
                         observer.onNext(getPhoto(photoUrl));
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        System.out.println(e.getMessage());
                     }
                 }
 

@@ -1,5 +1,7 @@
 package app;
 
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableTransformer;
 import model.Photo;
 import util.PhotoDownloader;
 import util.PhotoProcessor;
@@ -7,6 +9,7 @@ import util.PhotoSerializer;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,30 +34,31 @@ public class PhotoCrawler {
     }
 
     public void downloadPhotoExamples() throws IOException {
-        photoDownloader.getPhotoExamples().subscribe(photoSerializer::savePhoto);
-        /*try {
-            List<Photo> downloadedExamples = photoDownloader.getPhotoExamples();
-            for (Photo photo : downloadedExamples) {
-                photoSerializer.savePhoto(photo);
-            }
-        } catch (IOException e) {
-            log.log(Level.SEVERE, "Downloading photo examples error", e);
-        }*/
+        photoDownloader.getPhotoExamples().compose(processPhotos()).subscribe(photoSerializer::savePhoto);
     }
 
     public void downloadPhotosForQuery(String query) throws IOException {
         try {
-            photoDownloader.searchForPhotos(query).subscribe(photoSerializer::savePhoto);
+            photoDownloader.searchForPhotos(query).compose(processPhotos()).subscribe(photoSerializer::savePhoto);
         } catch (InterruptedException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public void downloadPhotosForMultipleQueries(List<String> queries) {
+    public void downloadPhotosForMultipleQueries(List<String> queries) throws IOException {
         try {
-            photoDownloader.searchForPhotos(queries).subscribe(photoSerializer::savePhoto);
-        } catch (InterruptedException | IOException e) {
+            photoDownloader.searchForPhotos(queries).compose(processPhotos()).subscribe(photoSerializer::savePhoto);
+        } catch (InterruptedException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public ObservableTransformer<Photo, Photo> processPhotos() {
+        return stream -> stream.filter(photoProcessor::isPhotoValid).publish(shared -> {
+            Observable<Photo> medium = shared.filter(photoProcessor::isPhotoMedium).buffer(5, TimeUnit.SECONDS).flatMap(Observable::fromIterable);
+            Observable<Photo> large = shared.filter(photoProcessor::isPhotoLarge).map(photoProcessor::convertToMiniature);
+
+            return Observable.merge(medium, large);
+        });
     }
 }

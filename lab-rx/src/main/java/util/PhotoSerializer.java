@@ -34,7 +34,7 @@ public class PhotoSerializer {
         try (FileOutputStream outputStream = new FileOutputStream(getPhotoPath(photo))) {
             outputStream.write(photo.getPhotoData());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
