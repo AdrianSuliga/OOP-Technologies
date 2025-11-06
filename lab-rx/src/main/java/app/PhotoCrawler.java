@@ -2,6 +2,8 @@ package app;
 
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableTransformer;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import model.Photo;
 import util.PhotoDownloader;
 import util.PhotoProcessor;
@@ -54,7 +56,7 @@ public class PhotoCrawler {
     }
 
     public ObservableTransformer<Photo, Photo> processPhotos() {
-        return stream -> stream.filter(photoProcessor::isPhotoValid).publish(shared -> {
+        return stream -> stream.observeOn(Schedulers.io()).filter(photoProcessor::isPhotoValid).publish(shared -> {
             Observable<Photo> medium = shared.filter(photoProcessor::isPhotoMedium).buffer(5, TimeUnit.SECONDS).flatMap(Observable::fromIterable);
             Observable<Photo> large = shared.filter(photoProcessor::isPhotoLarge).map(photoProcessor::convertToMiniature);
 

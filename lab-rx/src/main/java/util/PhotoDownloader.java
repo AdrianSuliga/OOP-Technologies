@@ -30,7 +30,7 @@ public class PhotoDownloader {
                 "https://i.pinimg.com/736x/7c/14/c9/7c14c97839940a09f987fbadbd47eb89--detective-monk-adrian-monk.jpg").map(this::getPhoto);
     }
 
-    public Observable<Photo> searchForPhotos(String searchQuery) throws IOException, InterruptedException {
+    public Observable<Photo> searchForPhotos(String searchQuery) throws InterruptedException {
         return Observable.create(observer -> {
             try {
                 List<String> photoUrls = GoogleSearchDriver.searchForImages(searchQuery);
