@@ -5,7 +5,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.chart.BubbleChart?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0"
@@ -14,9 +13,9 @@
             fx:controller="controller.GalleryController">
     <top>
         <HBox styleClass="form-box">
+            <TextField fx:id="searchTextField" promptText="Enter search query..." prefWidth="580"/>
+            <Button text="Search" onAction="#searchButtonClicked" />
             <Label text="Search for photos:" prefWidth="120"/>
-            <TextField fx:id="searchTextField" promptText="Enter search query..." prefWidth="500"/>
-            <Button text="Search" onAction="#searchButtonClicked"/>
         </HBox>
     </top>
     <left>
