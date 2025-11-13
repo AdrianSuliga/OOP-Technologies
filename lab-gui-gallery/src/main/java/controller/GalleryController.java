@@ -69,6 +69,7 @@ public class GalleryController {
         imageNameField.textProperty().bindBidirectional(selectedPhoto.nameProperty());
     }
 
+    @FXML
     public void searchButtonClicked(ActionEvent event) {
         PhotoDownloader downloader = new PhotoDownloader();
 

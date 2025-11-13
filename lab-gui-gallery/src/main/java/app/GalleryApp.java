@@ -51,7 +51,7 @@ public class GalleryApp extends Application {
     private void configureModel(Gallery gallery) throws IOException {
         var photoSerializer = new PhotoSerializer("photos");
         photoSerializer.registerGallery(gallery);
-        fillGallery(gallery);
+        //fillGallery(gallery);
     }
 
     private void fillGallery(Gallery gallery) {

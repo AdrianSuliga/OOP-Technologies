@@ -41,7 +41,6 @@ public class PhotoSerializer {
                             renamePhoto(oldValue, newValue);
                         });
                     });
-
                 } else {
                     change.getRemoved().forEach(this::removePhoto);
                 }
