@@ -5,11 +5,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.inject.Inject;
 import pl.edu.agh.logger.Logger;
 
 public class SchoolClass implements Serializable {
 
 	private static final long serialVersionUID = -1458264557391305041L;
+
+    @Inject
+    private Logger logger;
 
 	private final String name;
 	private final String profile;
@@ -38,7 +42,7 @@ public class SchoolClass implements Serializable {
 	public void addSubject(Subject subject) {
 		if (!subjects.contains(subject)) {
 			subjects.add(subject);
-			Logger.getInstance().log(
+            logger.log(
 					"Added " + subject.toString() + " to " + this.toString());
 		}
 	}
@@ -51,7 +55,7 @@ public class SchoolClass implements Serializable {
 		if (!students.contains(student)) {
 			students.add(student);
 			student.setSchoolClass(this);
-			Logger.getInstance().log(
+            logger.log(
 					"Added " + student.toString() + " to class "
 							+ this.toString());
 		}
