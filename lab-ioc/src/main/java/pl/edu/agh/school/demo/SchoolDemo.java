@@ -52,7 +52,9 @@ public class SchoolDemo {
 
     public void initClass() throws ParseException {
         if (school.findClass("1A", "humane").isEmpty()) {
+            final Injector injector = Guice.createInjector(new SchoolModule());
             SchoolClass schoolClass = new SchoolClass("1A", "humane");
+            injector.injectMembers(schoolClass);
             schoolClass.addStudent(new Student("Peter", "Pan"));
             schoolClass.addStudent(new Student("Anna", "Shirley"));
             schoolClass.addStudent(new Student("Harry", "Potter"));

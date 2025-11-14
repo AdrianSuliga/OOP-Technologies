@@ -25,15 +25,11 @@ public class SchoolDAO {
     }*/
 
     @Inject
-    public SchoolDAO(PersistenceManager manager) {
+    public SchoolDAO(PersistenceManager manager, Logger log) {
         this.manager = manager;
+        this.log = log;
         teachers = this.manager.loadTeachers();
         classes = this.manager.loadClasses();
-    }
-
-    @Inject
-    public void setLog(Logger log) {
-        this.log = log;
     }
 
     public void addTeacher(Teacher teacher) {

@@ -12,7 +12,6 @@ public class SchoolClass implements Serializable {
 
 	private static final long serialVersionUID = -1458264557391305041L;
 
-    @Inject
     private Logger logger;
 
 	private final String name;
@@ -25,6 +24,11 @@ public class SchoolClass implements Serializable {
 		this.name = name;
 		this.profile = profile;
 	}
+
+    @Inject
+    public void setLog(Logger log) {
+        this.logger = log;
+    }
 
 	public String getName() {
 		return name;
